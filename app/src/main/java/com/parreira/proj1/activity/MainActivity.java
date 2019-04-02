@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         Log.d(TAG, "onStop");
+
     }
 
     @Override
