@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Proj1</string>
+    <string name="toast_text">Ei Victor, sei o que tou fazendo pow!</string>
+    <string name="toast_text2">A tela girou!</string>
+    <string name="ed1_text">Introduzir valor.</string>
+    <string name="btn1_text">Introduzir</string>
 </resources>
