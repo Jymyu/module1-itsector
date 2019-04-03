@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         final EditText editText = (EditText) findViewById(R.id.et_intro);
         Button btnChangeName = (Button) findViewById(R.id.btn_change_name);
 
-       // final MyAdapter myAdapter = new MyAdapter(this,R.layout.list_view,myArray);
-        //listView.setAdapter(myAdapter);
+       final MyAdapter myAdapter = new MyAdapter(this, myArray);
+        listView.setAdapter(myAdapter);
 
         btnChangeName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
 
-                    //myAdapter.addItem(text);
-                    //myAdapter.notifyDataSetChanged();
-                    //editText.setText("");
+                    myArray.add(text);
+                    myAdapter.notifyDataSetChanged();
+                    editText.setText("");
                 }
 
 
