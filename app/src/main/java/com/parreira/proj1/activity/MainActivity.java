@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,7 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Headers;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private final String TAG = MainActivity.class.getSimpleName();
     private static final String DATABASE_NAME = "pessoaDatabase";
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<Pessoa> pessoasOnLine;
+        final List<Pessoa> pessoasOnLine = new ArrayList<Pessoa>();
 
         Log.d(TAG, "onCreate");
 
@@ -62,8 +64,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Pessoa>> call, Response<List<Pessoa>> response) {
                 Log.d("Callback", response.message());
-               // pessoasOnLine.addAll(response.body());
-                initArray(response.body());
+
+                pessoasOnLine.addAll(response.body());
+
+               initArray(pessoasOnLine);
             }
 
             @Override
@@ -89,11 +93,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         //new UpdateDatabase(pessoaDatabase).execute(pessoa3);
-
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
+        pessoasOnLine.add(pessoa3);
 
 
         //pessoasOnLine.add(pessoaDatabase.daoAcess().obterPessoa(3));
-        //initArray(pessoasOnLine);
+        initArray(pessoasOnLine);
 
     }
 
@@ -178,15 +189,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void initArray (List<Pessoa> list) {
 
+       RecyclerView.Adapter mAdapter;
+        LinearLayoutManager layoutManager;
 
-        final ListView listView = (ListView) findViewById(R.id.lv_text);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-
-        final MyAdapter myAdapter = new MyAdapter(this, list);
-        listView.setAdapter(myAdapter);
-
-
+        //final ListView listView = (ListView) findViewById(R.id.lv_text);
+        //final MyAdapter myAdapter = new MyAdapter(this, list);
+        //listView.setAdapter(myAdapter);
         //myAdapter.notifyDataSetChanged();
+
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        // specify an adapter (see also next example)
+        mAdapter = new MyAdapter(this,list);
+        recyclerView.setAdapter(mAdapter);
+
+
+
+
+/*
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -199,9 +228,27 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
 
     }
+
+
+
+    /*
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Pessoa pessoa = (Pessoa) parent.getItemAtPosition(position);
+        switch (view.getId()) {
+            case R.id.item_lista:
+
+                Intent myIntent = new Intent(MainActivity.this, SecondActivity.class);
+                myIntent.putExtra(SecondActivity.KEY_PESSOA, pessoa);
+                startActivity(myIntent);
+        }
+
+
+    }*/
 }
 
 
