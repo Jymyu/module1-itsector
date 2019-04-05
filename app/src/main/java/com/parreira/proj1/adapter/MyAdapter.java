@@ -10,15 +10,19 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.parreira.proj1.R;
+import com.parreira.proj1.activity.Pessoa;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyAdapter extends BaseAdapter{
 
     private Context mContext;
-    private ArrayList<String> mArray;
+    private List<Pessoa> mArray;
 
-    public MyAdapter (Context context, ArrayList<String> array){
+    public MyAdapter (Context context, List<Pessoa> array){
         this.mContext = context;
         this.mArray = array;
     }
@@ -36,12 +40,12 @@ public class MyAdapter extends BaseAdapter{
 
     @Override
     public Object getItem(int position) {
-        String text = null;
-
         if (mArray.get(position) != null) {
-            text = mArray.get(position);
+            return mArray.get(position);
         }
-        return text;
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -50,14 +54,25 @@ public class MyAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View contextView, ViewGroup parent) {
 
         LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        convertView = mInflater.inflate(R.layout.list_view, null);
+        contextView = mInflater.inflate(R.layout.list_view, null);
 
-        TextView mTextView = (TextView) convertView.findViewById(R.id.tv_list_view);
+        TextView mTextView = (TextView) contextView.findViewById(R.id.tv_name);
+        TextView mTextView2 = (TextView) contextView.findViewById(R.id.tv_resume);
+        CircleImageView profileImage = (CircleImageView) contextView.findViewById(R.id.img_profile_image);
 
-        mTextView.setText(mArray.get(position));
-        return convertView;
+        mTextView.setText(mArray.get(position).getNome());
+        mTextView2.setText(mArray.get(position).getTexto());
+
+        int img = mArray.get(position).getImage();
+        if(img > 0){
+            profileImage.setImageResource(img);
+        } else{
+            profileImage.setImageResource(R.drawable.ic_launcher_foreground);
+        }
+
+        return contextView;
     }
 }

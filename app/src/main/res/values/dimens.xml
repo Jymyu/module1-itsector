@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="texto_normal">20sp</dimen>
+    <dimen name="margin_left_text">5dp</dimen>
+    <dimen name="margin_top_name">10dp</dimen>
+    <dimen name="margin_top_text">20dp</dimen>
+    <dimen name="padding_item">10dp</dimen>
+    <dimen name="profile_pic_height">100dp</dimen>
+</resources>

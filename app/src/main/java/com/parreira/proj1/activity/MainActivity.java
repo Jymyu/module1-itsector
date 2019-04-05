@@ -1,13 +1,21 @@
 package com.parreira.proj1.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -18,8 +26,16 @@ import android.widget.Toast;
 
 import com.parreira.proj1.R;
 import com.parreira.proj1.adapter.MyAdapter;
+import com.parreira.proj1.network.PessoaService;
+import com.parreira.proj1.network.RetrofitClientInstance;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Headers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,35 +48,30 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate");
 
-         final ArrayList myArray = new ArrayList();
-
-
-        final ListView listView = (ListView) findViewById(R.id.lv_text);
-        final EditText editText = (EditText) findViewById(R.id.et_intro);
-        Button btnChangeName = (Button) findViewById(R.id.btn_change_name);
-
-       final MyAdapter myAdapter = new MyAdapter(this, myArray);
-        listView.setAdapter(myAdapter);
-
-        btnChangeName.setOnClickListener(new View.OnClickListener() {
+        /*Create handle for the RetrofitInstance interface*/
+        PessoaService service = RetrofitClientInstance.getRetrofitInstance().create(PessoaService.class);
+        Call<List<Pessoa>> call = service.getPessoas();
+        call.enqueue(new Callback<List<Pessoa>>() {
             @Override
-            public void onClick(View v) {
-                String text = editText.getText().toString();
+            public void onResponse(Call<List<Pessoa>> call, Response<List<Pessoa>> response) {
+                Log.d("Callback", response.message());
+                initArray(response.body());
+            }
 
-                if (text.equals("")) {
-
-                }
-                else{
-
-                    myArray.add(text);
-                    myAdapter.notifyDataSetChanged();
-                    editText.setText("");
-                }
-
+            @Override
+            public void onFailure(Call<List<Pessoa>> call, Throwable t) {
+                Log.d("Callback", t.getMessage());
+                Log.d("Callback", call.request().headers().toString());
+                Log.d("Callback", call.request().url().toString());
 
             }
         });
+
+
     }
+
+
+
 
     @Override
     protected void onStart() {
@@ -110,6 +121,55 @@ public class MainActivity extends AppCompatActivity {
         toast.show();
 
         Log.d(TAG, "onRestart");
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.version:
+            Toast toast = Toast.makeText(this,"Version",Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+
+    private void initArray (List<Pessoa> list) {
+
+
+        final ListView listView = (ListView) findViewById(R.id.lv_text);
+
+
+        final MyAdapter myAdapter = new MyAdapter(this, list);
+        listView.setAdapter(myAdapter);
+
+
+        //myAdapter.notifyDataSetChanged();
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Pessoa pessoa = (Pessoa) listView.getItemAtPosition(position);
+                Intent myIntent = new Intent(MainActivity.this, SecondActivity.class);
+                myIntent.putExtra(SecondActivity.KEY_PESSOA, pessoa);
+                startActivity(myIntent);
+
+            }
+        });
+
+
     }
 }
 
