@@ -2,6 +2,7 @@ package com.parreira.proj1.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -24,8 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parreira.proj1.BuildConfig;
 import com.parreira.proj1.R;
 import com.parreira.proj1.adapter.MyAdapter;
+import com.parreira.proj1.asynktask.UpdateDatabase;
+import com.parreira.proj1.database.PessoaDatabase;
 import com.parreira.proj1.network.PessoaService;
 import com.parreira.proj1.network.RetrofitClientInstance;
 
@@ -40,11 +44,14 @@ import retrofit2.http.Headers;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
+    private static final String DATABASE_NAME = "pessoaDatabase";
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        List<Pessoa> pessoasOnLine;
 
         Log.d(TAG, "onCreate");
 
@@ -55,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Pessoa>> call, Response<List<Pessoa>> response) {
                 Log.d("Callback", response.message());
+               // pessoasOnLine.addAll(response.body());
                 initArray(response.body());
             }
 
@@ -67,6 +75,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        final PessoaDatabase pessoaDatabase;
+        pessoaDatabase = Room.databaseBuilder(getApplicationContext(),PessoaDatabase.class,DATABASE_NAME)
+                .fallbackToDestructiveMigration()
+                .build();
+
+
+                Pessoa pessoa3 =new Pessoa();
+                pessoa3.setId(3);
+                pessoa3.setNome("Manolo");
+                pessoa3.setTexto("sdfsdf sd fsdfsd sd fsdf sd sdsddfsdf ");
+
+
+        //new UpdateDatabase(pessoaDatabase).execute(pessoa3);
+
+
+
+        //pessoasOnLine.add(pessoaDatabase.daoAcess().obterPessoa(3));
+        //initArray(pessoasOnLine);
 
     }
 
@@ -126,11 +153,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.version:
-            Toast toast = Toast.makeText(this,"Version",Toast.LENGTH_SHORT);
-            toast.show();
+                String versionName = BuildConfig.VERSION_NAME;
+                Toast toast = Toast.makeText(this,"Version " + versionName,Toast.LENGTH_SHORT);
+                toast.show();
         }
         return false;
     }

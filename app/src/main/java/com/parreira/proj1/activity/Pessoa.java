@@ -1,5 +1,9 @@
 package com.parreira.proj1.activity;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,8 +22,12 @@ import java.io.Serializable;
  * mechanism; to sell, license, lease, rent, redistribute or make accessible to any third party,
  * whether for profit or without charge.
  */
+@Entity
 public class Pessoa implements Serializable {
 
+
+    @NonNull
+    @PrimaryKey
     private Integer id;
     private String nome;
 
