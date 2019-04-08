@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.parreira.proj1.BuildConfig;
 import com.parreira.proj1.R;
 import com.parreira.proj1.adapter.MyAdapter;
+import com.parreira.proj1.asynktask.UpdateDatabase;
 import com.parreira.proj1.database.PessoaDatabase;
 import com.parreira.proj1.network.PessoaService;
 import com.parreira.proj1.network.RetrofitClientInstance;
@@ -27,16 +28,15 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
+    private List<Pessoa> pessoaList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final List<Pessoa> pessoasOnLine = new ArrayList<Pessoa>();
-
         Log.d(TAG, "onCreate");
 
-        /*Create handle for the RetrofitInstance interface*/
         PessoaService service = RetrofitClientInstance.getRetrofitInstance().create(PessoaService.class);
         Call<List<Pessoa>> call = service.getPessoas();
         call.enqueue(new Callback<List<Pessoa>>() {
@@ -44,30 +44,28 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Pessoa>> call, Response<List<Pessoa>> response) {
                 Log.d("Callback", response.message());
 
-                pessoasOnLine.addAll(response.body());
-                initArray(pessoasOnLine);
+                pessoaList = response.body();
 
+                for (Pessoa pessoa : pessoaList) {
+                    if (PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaById(pessoa.getId()) == null) {
+                        PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().insertPessoa(pessoa);
+                    }
+                }
+
+
+
+                initArray(pessoaList);
             }
 
             @Override
             public void onFailure(Call<List<Pessoa>> call, Throwable t) {
-//                List<Pessoa> list = PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaAll();
+                Log.d("Callback", "Failure");
 
-                Pessoa pessoa = PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaById(4);
-                List<Pessoa> list = new ArrayList<Pessoa>();
-                list.add(pessoa);
-              Log.d("Callback", "Failure");
-                //initArray(list);
+                pessoaList.addAll(PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaAll());
+                initArray(pessoaList);
+
             }
-
-            //
-            // PessoaDatabase.destroyInstance();
-
         });
-
-
-
-        //PessoaDatabase.getAppDatabase(MainActivity .this).daoAcess().insertAll(pessoasOnLine);
     }
 
 

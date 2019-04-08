@@ -29,7 +29,6 @@ public interface PessoaService {
             "JsonStub-Project-Key: 7f581720-8447-457a-8cc4-2d865a9cbce4",
             "Content-Type: application/json"
     })
-
     @GET("/pessoas")
     Call<List<Pessoa>> getPessoas();
 

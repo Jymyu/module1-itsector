@@ -1,10 +1,14 @@
 package com.parreira.proj1.asynktask;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.parreira.proj1.activity.MainActivity;
 import com.parreira.proj1.activity.Pessoa;
 import com.parreira.proj1.database.PessoaDatabase;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by João Parreira on 4/5/2019.
@@ -22,15 +26,19 @@ import com.parreira.proj1.database.PessoaDatabase;
 public class UpdateDatabase extends AsyncTask<Pessoa,Integer,String>{
 
     PessoaDatabase mpessoaDatabase;
-    public UpdateDatabase(PessoaDatabase pessoaDatabase) {
+    List<Pessoa> mlist;
+    public UpdateDatabase(PessoaDatabase pessoaDatabase,List<Pessoa> list) {
         this.mpessoaDatabase = pessoaDatabase;
+        this.mlist = list;
     }
 
-    @Override
-    protected String doInBackground(Pessoa... pessoa){
 
-            Pessoa pessoa1 = pessoa[0];
-            mpessoaDatabase.daoAcess ().insertPessoa(pessoa1);
-        return "finished asynktask";
+    @Override
+    protected String doInBackground(Pessoa... pessoas) {
+
+        mpessoaDatabase.daoAcess ().insertAll(mlist);
+        Log.d("aSynkTask","executada");
+
+        return null;
     }
 }

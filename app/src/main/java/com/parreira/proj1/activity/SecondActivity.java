@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.parreira.proj1.R;
+import com.parreira.proj1.database.Nacionalidade;
+import com.parreira.proj1.database.PessoaDatabase;
 
 /**
  * Created by João Parreira on 4/3/2019.
@@ -36,17 +38,18 @@ public class SecondActivity extends AppCompatActivity {
 
         TextView nome = (TextView) findViewById(R.id.tv_name2);
         TextView text = (TextView) findViewById(R.id.tv_text2);
+        TextView nacionalidade = (TextView) findViewById(R.id.tv_nacionalidade);
+
+        Nacionalidade nac = PessoaDatabase.getAppDatabase(this).NacionalidadeDao().getNacionalidadeById(pessoa.getNacionalidade());
 
         nome.setText(pessoa.getNome());
         text.setText(pessoa.getTexto());
+        nacionalidade.setText(nac.getNacionalidade());
 
         Log.d(TAG,pessoa.getNome());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
-
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

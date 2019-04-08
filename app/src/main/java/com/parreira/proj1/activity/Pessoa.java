@@ -2,13 +2,17 @@ package com.parreira.proj1.activity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.parreira.proj1.database.Nacionalidade;
 
 import java.io.Serializable;
+
+import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
  * Created by João Parreira on 4/4/2019.
@@ -27,12 +31,22 @@ import java.io.Serializable;
 public class Pessoa implements Serializable {
 
 
-    @NonNull
     @PrimaryKey
     private Integer id;
 
     @ColumnInfo(name = "nome_pessoa")
+    @NonNull
     private String nome;
+
+
+
+    @ColumnInfo(name = "idade")
+    private int idade;
+
+    @ForeignKey(entity = Nacionalidade.class, parentColumns = "id",childColumns = "Nacionalidade", onDelete = CASCADE)
+
+    @ColumnInfo(name = "Nacionalidade")
+    int nacionalidade;
 
     @JsonProperty("descricao")
     private String texto;
@@ -44,9 +58,11 @@ public class Pessoa implements Serializable {
     public Pessoa() {
     }
 
-    public Pessoa(Integer id, String nome, String texto, int image) {
+    public Pessoa(@NonNull Integer id, @NonNull String nome, int idade, int nacionalidade, String texto, int image) {
         this.id = id;
         this.nome = nome;
+        this.idade = idade;
+        this.nacionalidade = nacionalidade;
         this.texto = texto;
         this.image = image;
     }
@@ -81,5 +97,21 @@ public class Pessoa implements Serializable {
 
     public void setImage(int image) {
         this.image = image;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    public int getNacionalidade() {
+        return nacionalidade;
+    }
+
+    public void setNacionalidade(int nacionalidade) {
+        this.nacionalidade = nacionalidade;
     }
 }

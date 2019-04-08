@@ -9,10 +9,8 @@ import android.support.annotation.NonNull;
 
 import com.parreira.proj1.activity.Pessoa;
 
-import java.util.List;
-
 /**
- * Created by João Parreira on 4/5/2019.
+ * Created by João Parreira on 4/8/2019.
  * <p>
  * ITSector ITSector
  * joao.parreira@itsector.pt
@@ -25,32 +23,21 @@ import java.util.List;
  * whether for profit or without charge.
  */
 @Dao
-public interface DaoAcess {
+public interface NacionalidadeDao {
 
     @Insert
-    void insertPessoa(Pessoa pessoa);
+     void insertNacionalidade(Nacionalidade nacionalidade);
 
     @Insert
-    void insertAll(List<Pessoa> listaPessoa);
-
-    @Query("SELECT * FROM Pessoa WHERE id = :pessoaID")
-    Pessoa getPessoaById(int pessoaID);
-
-    @Query("SELECT * FROM Pessoa WHERE nome_pessoa = :nome")
-    Pessoa getPessoaByName(String nome);
-
-    @Query("SELECT * FROM Pessoa WHERE nome_pessoa LIKE :grupo")
-    Pessoa getPessoaByNameWithJ (String grupo);
-
-    @Query("SELECT * FROM Pessoa P JOIN Nacionalidade N  ON (P.Nacionalidade = N.id) WHERE P.id = :pessoaID")
-    Pessoa getNacionalidade (int pessoaID);
-
-    @Query("SELECT * FROM Pessoa")
-    List<Pessoa> getPessoaAll();
+    void insertNacionalidadeAll(Nacionalidade[] nacionalidade);
 
     @Update
-    void updatePessoa(Pessoa pessoa);
+    void updateNacionalidade(Nacionalidade nacionalidade);
 
     @Delete
-    void deletePessoa(Pessoa pessoa);
+    void deleteNacionalidade(Nacionalidade nacionalidade);
+
+    @Query("SELECT * FROM Nacionalidade WHERE id = :nacionalidadeID")
+    Nacionalidade getNacionalidadeById(int nacionalidadeID);
+
 }

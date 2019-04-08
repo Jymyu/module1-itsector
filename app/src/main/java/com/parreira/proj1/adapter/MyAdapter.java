@@ -36,7 +36,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onItemClick(RecyclerView.ViewHolder item);
     }
 
-    private Context mContext;
+    private static Context mContext;
     private List<Pessoa> mArray;
     private OnItemClickListener monItemClickListener;
 
@@ -53,9 +53,11 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         CircleImageView profileImage;
         CardView parentLayout;
 
+
         public MyViewHolder(final View v) {
             super(v);
             //listView = v;
+
 
             mTextView = (TextView) v.findViewById(R.id.tv_name);
             mTextView2 = (TextView) v.findViewById(R.id.tv_resume);
@@ -68,9 +70,12 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     Pessoa pessoa = (Pessoa) v.getTag();
-                    Log.d("Debug", "está a clicar");
+                    Log.d("Debug", "está a clicar " + pessoa.getNome());
 
 
+                    Intent intent = new Intent(MyAdapter.mContext, SecondActivity.class);
+                    intent.putExtra(SecondActivity.KEY_PESSOA, pessoa);
+                    MyAdapter.mContext.startActivity(intent);
 
                 }
             });
