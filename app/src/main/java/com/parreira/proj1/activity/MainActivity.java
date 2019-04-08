@@ -1,12 +1,5 @@
 package com.parreira.proj1.activity;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.arch.persistence.room.Room;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,7 +26,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
-    private static final String DATABASE_NAME = "pessoaDatabase";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,46 +45,29 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Callback", response.message());
 
                 pessoasOnLine.addAll(response.body());
-
                 initArray(pessoasOnLine);
+
             }
 
             @Override
             public void onFailure(Call<List<Pessoa>> call, Throwable t) {
-                Log.d("Callback", t.getMessage());
-                Log.d("Callback", call.request().headers().toString());
-                Log.d("Callback", call.request().url().toString());
+//                List<Pessoa> list = PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaAll();
 
+                Pessoa pessoa = PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaById(4);
+                List<Pessoa> list = new ArrayList<Pessoa>();
+                list.add(pessoa);
+              Log.d("Callback", "Failure");
+                //initArray(list);
             }
+
+            //
+            // PessoaDatabase.destroyInstance();
+
         });
 
 
-        final PessoaDatabase pessoaDatabase;
-        pessoaDatabase = Room.databaseBuilder(getApplicationContext(), PessoaDatabase.class, DATABASE_NAME)
-                .fallbackToDestructiveMigration()
-                .build();
 
-
-        Pessoa pessoa3 = new Pessoa();
-        pessoa3.setId(3);
-        pessoa3.setNome("Manolo");
-        pessoa3.setTexto("sdfsdf sd fsdfsd sd fsdf sd sdsddfsdf ");
-
-
-        //new UpdateDatabase(pessoaDatabase).execute(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-        pessoasOnLine.add(pessoa3);
-
-
-        //pessoasOnLine.add(pessoaDatabase.daoAcess().obterPessoa(3));
-        initArray(pessoasOnLine);
-
+        //PessoaDatabase.getAppDatabase(MainActivity .this).daoAcess().insertAll(pessoasOnLine);
     }
 
 

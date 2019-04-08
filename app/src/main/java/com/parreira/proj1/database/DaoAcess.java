@@ -27,19 +27,20 @@ import java.util.List;
 public interface DaoAcess {
 
     @Insert
-    void insertPessoa (Pessoa pessoa);
+    void insertPessoa(Pessoa pessoa);
 
     @Insert
-    void insertMultiplasPessoas (List<Pessoa> listaPessoa);
+    void insertAll(List<Pessoa> listaPessoa);
 
-    @Query ("SELECT * FROM Pessoa WHERE Pessoa.id = :pessoaID")
-    Pessoa obterPessoa (int pessoaID);
+    @Query("SELECT * FROM Pessoa WHERE id = :pessoaID")
+    Pessoa getPessoaById(int pessoaID);
+
+    @Query("SELECT * FROM Pessoa")
+    List<Pessoa> getPessoaAll();
 
     @Update
-    void updatePessoa (Pessoa pessoa);
+    void updatePessoa(Pessoa pessoa);
 
     @Delete
-    void deletePessoa (Pessoa pessoa);
-
-
+    void deletePessoa(Pessoa pessoa);
 }
