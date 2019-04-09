@@ -38,8 +38,6 @@ public class Pessoa implements Serializable {
     @NonNull
     private String nome;
 
-
-
     @ColumnInfo(name = "idade")
     private int idade;
 
@@ -51,14 +49,14 @@ public class Pessoa implements Serializable {
     @JsonProperty("descricao")
     private String texto;
 
-    @JsonIgnore
-    private int image;
+    @JsonProperty("url-image")
+    private String image;
 
 
     public Pessoa() {
     }
 
-    public Pessoa(@NonNull Integer id, @NonNull String nome, int idade, int nacionalidade, String texto, int image) {
+    public Pessoa(@NonNull Integer id, @NonNull String nome, int idade, int nacionalidade, String texto, String image) {
         this.id = id;
         this.nome = nome;
         this.idade = idade;
@@ -91,11 +89,11 @@ public class Pessoa implements Serializable {
         this.texto = texto;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

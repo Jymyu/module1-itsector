@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.parreira.proj1.BuildConfig;
@@ -28,12 +30,15 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
 
-    private List<Pessoa> pessoaList;
+    private List<Pessoa> pessoaList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
         Log.d(TAG, "onCreate");
 
@@ -44,17 +49,15 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Pessoa>> call, Response<List<Pessoa>> response) {
                 Log.d("Callback", response.message());
 
-                pessoaList = response.body();
 
-                for (Pessoa pessoa : pessoaList) {
+
+                for (Pessoa pessoa : response.body()) {
                     if (PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().getPessoaById(pessoa.getId()) == null) {
                         PessoaDatabase.getAppDatabase(MainActivity.this).daoAcess().insertPessoa(pessoa);
                     }
                 }
 
-
-
-                initArray(pessoaList);
+                initArray(response.body());
             }
 
             @Override
@@ -155,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mAdapter = new MyAdapter(this, list);
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.pb_progressbar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         recyclerView.setAdapter(mAdapter);
     }
 }

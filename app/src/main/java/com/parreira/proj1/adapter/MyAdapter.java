@@ -21,6 +21,7 @@ import com.parreira.proj1.R;
 import com.parreira.proj1.activity.MainActivity;
 import com.parreira.proj1.activity.Pessoa;
 import com.parreira.proj1.activity.SecondActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -110,9 +111,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         mTextView.setText(mArray.get(position).getNome());
         mTextView2.setText(mArray.get(position).getTexto());
 
-        int img = mArray.get(position).getImage();
-        if (img > 0) {
-            profileImage.setImageResource(img);
+        String img = mArray.get(position).getImage();
+        if (img.length()>0) {
+            Picasso.get().load(mArray.get(position).getImage()).into(profileImage);
         } else {
             profileImage.setImageResource(R.drawable.ic_launcher_foreground);
         }
