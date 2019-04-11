@@ -1,12 +1,18 @@
 package com.parreira.proj1.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parreira.proj1.R;
+import com.parreira.proj1.broadcast.ChargingBroadcastReceiver;
 import com.parreira.proj1.database.Nacionalidade;
 import com.parreira.proj1.database.PessoaDatabase;
 import com.squareup.picasso.Picasso;
@@ -41,6 +48,10 @@ public class SecondActivity extends AppCompatActivity {
     private CircleImageView profileImage;
 
     private Pessoa pessoa;
+    private static ImageView chargingImage;
+
+    IntentFilter mChargingIntentFilter;
+    BroadcastReceiver mChargingReciver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +64,7 @@ public class SecondActivity extends AppCompatActivity {
         TextView text = (TextView) findViewById(R.id.tv_text2);
         TextView nacionalidade = (TextView) findViewById(R.id.tv_nacionalidade);
         profileImage = findViewById(R.id.img_profile_image2);
+        chargingImage = findViewById(R.id.charging_image);
 
         Nacionalidade nac = PessoaDatabase.getAppDatabase(this).NacionalidadeDao().getNacionalidadeById(pessoa.getNacionalidade());
 
@@ -69,27 +81,42 @@ public class SecondActivity extends AppCompatActivity {
                 intent.setType("image/*");
 
 
-
-
-               // String[] mimeTypes = {"image/jpeg", "image/png"};
+                // String[] mimeTypes = {"image/jpeg", "image/png"};
                 String[] mimeTypes = {"image/jpeg", "image/png"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
 
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
 
             }
         });
 
-        Log.d(TAG,pessoa.getNome());
+        Log.d(TAG, pessoa.getNome());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        mChargingIntentFilter = new IntentFilter();
+        mChargingIntentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        mChargingIntentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+
+        mChargingReciver = new ChargingBroadcastReceiver();
+        registerReceiver(mChargingReciver,mChargingIntentFilter);
+    }
+    //set up icon off charger
+
+    public static void showCharging(Boolean isCharging) {
+        if (isCharging) {
+            chargingImage.setImageResource(R.drawable.ic_poweron);
+        } else {
+            chargingImage.setImageResource(R.drawable.ic_poweroff);
+        }
+
     }
 
-    public void onActivityResult (int requestCode,int resultCode,Intent data){
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK)
-            switch (requestCode){
+            switch (requestCode) {
                 case 1:
                     //data.getData returns the content URI for the selected Image
                     Uri selectedImage = data.getData();
@@ -97,16 +124,37 @@ public class SecondActivity extends AppCompatActivity {
                     profileImage.setImageURI(selectedImage);
 
                     pessoa.setImage(selectedImage.toString());
-                   // PessoaDatabase.getAppDatabase(SecondActivity.this).daoAcess().updatePessoa(pessoa);
+                    // PessoaDatabase.getAppDatabase(SecondActivity.this).daoAcess().updatePessoa(pessoa);
                     break;
             }
 
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-        case android.R.id.home:
-        onBackPressed();}
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+        }
         return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        registerReceiver(mChargingReciver,mChargingIntentFilter);
+
+        BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+        boolean isCharging = batteryManager.isCharging();
+        showCharging(isCharging);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(mChargingReciver);
     }
 
     @Override

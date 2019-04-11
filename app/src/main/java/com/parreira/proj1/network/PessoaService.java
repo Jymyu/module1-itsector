@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 
 /**
  * Created by João Parreira on 4/4/2019.
@@ -29,7 +32,15 @@ public interface PessoaService {
             "JsonStub-Project-Key: 7f581720-8447-457a-8cc4-2d865a9cbce4",
             "Content-Type: application/json"
     })
-    @GET("/pessoas")
+    @GET("pessoas")
     Call<List<Pessoa>> getPessoas();
+
+    @Headers({
+            "JsonStub-User-Key: c8c5b1c8-d8fb-4c41-92a6-43dac8646042",
+            "JsonStub-Project-Key: 7f581720-8447-457a-8cc4-2d865a9cbce4",
+            "Content-Type: application/json"
+    })
+    @POST("pessoas")
+    Call<List<Pessoa>> insertPessoa(@Body List<Pessoa> pessoas);
 
 }

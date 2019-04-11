@@ -40,4 +40,8 @@ public interface NacionalidadeDao {
     @Query("SELECT * FROM Nacionalidade WHERE id = :nacionalidadeID")
     Nacionalidade getNacionalidadeById(int nacionalidadeID);
 
+    @Query("SELECT id FROM Nacionalidade WHERE nacionalidade = :nacionalidade")
+    int getNacionalidadeByNome(String nacionalidade);
+
+
 }

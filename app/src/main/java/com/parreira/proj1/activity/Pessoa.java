@@ -31,7 +31,8 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class Pessoa implements Serializable {
 
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+
     private Integer id;
 
     @ColumnInfo(name = "nome_pessoa")
@@ -52,6 +53,17 @@ public class Pessoa implements Serializable {
     @JsonProperty("url-image")
     private String image;
 
+    @Override
+    public String toString() {
+        return "Pessoa{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", idade=" + idade +
+                ", nacionalidade=" + nacionalidade +
+                ", texto='" + texto + '\'' +
+                ", image='" + image + '\'' +
+                '}';
+    }
 
     public Pessoa() {
     }

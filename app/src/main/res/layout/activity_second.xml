@@ -47,6 +47,12 @@
         style="@style/ContentText"
         android:layout_marginTop="@dimen/margin_top_text"
         />
-
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:id="@+id/charging_image"
+    android:layout_alignParentRight="true"
+    />
 
 </RelativeLayout>

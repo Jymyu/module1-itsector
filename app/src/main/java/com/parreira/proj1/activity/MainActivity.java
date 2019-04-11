@@ -1,6 +1,8 @@
 package com.parreira.proj1.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,9 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
+    public static final String POST = "post";
+    public static final String NOME = "nome";
+    public static final String NACIONALIDADE = "nacionalidade";
 
     private List<Pessoa> pessoaList = new ArrayList<>();
 
@@ -69,6 +74,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_button);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this , AddPostActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
 
